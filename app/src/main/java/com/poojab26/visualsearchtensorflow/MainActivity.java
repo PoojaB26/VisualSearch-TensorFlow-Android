@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.poojab26.visualsearchtensorflow.Interface.RetrofitInterface;
 import com.poojab26.visualsearchtensorflow.Model.Product;
 import com.poojab26.visualsearchtensorflow.Utils.APIClient;
+import com.squareup.picasso.Picasso;
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
 import com.wonderkiln.camerakit.CameraKitEventListener;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
                 bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
 
-                imageViewResult.setImageBitmap(bitmap);
+                //imageViewResult.setImageBitmap(bitmap);
 
                 final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
 
@@ -119,6 +120,13 @@ public class MainActivity extends AppCompatActivity {
 
                 final Product products = response.body();
                 Log.d("MAIN", products.toString());
+                String URL = products.getProductLabel().get(0).getImages().get(1).getImageUrl();
+                Picasso.
+                        with(getApplicationContext())
+                        .load(URL)
+                        .resize(160, 200)
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .into(imageViewResult);
 
 
             }
