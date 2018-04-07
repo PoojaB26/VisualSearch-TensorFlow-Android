@@ -1,16 +1,21 @@
 package com.poojab26.visualsearchtensorflow;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.util.Size;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.poojab26.visualsearchtensorflow.Interface.RetrofitInterface;
+import com.poojab26.visualsearchtensorflow.Model.Product;
+import com.poojab26.visualsearchtensorflow.Utils.APIClient;
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
 import com.wonderkiln.camerakit.CameraKitEventListener;
@@ -18,12 +23,20 @@ import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
+    // json = https://gist.githubusercontent.com/PoojaB26/07cd672876c885f21396313d07270db9/raw/2cdc14ed43641f7f9e67333b25f30e55058fbdcf/product.json
+
+    public RetrofitInterface retrofitInterface;
     private static final int INPUT_SIZE = 224;
     private static final int IMAGE_MEAN = 128;
     private static final float IMAGE_STD = 128.0f;
@@ -32,34 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String MODEL_FILE = "file:///android_asset/graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/labels.txt";
-
-    private static final boolean SAVE_PREVIEW_BITMAP = false;
-
-    private static final boolean MAINTAIN_ASPECT = true;
-
-    private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
-
-
-    private Integer sensorOrientation;
-
-    private int previewWidth = 0;
-    private int previewHeight = 0;
-    private byte[][] yuvBytes;
-    private int[] rgbBytes = null;
-    private Bitmap rgbFrameBitmap = null;
-    private Bitmap croppedBitmap = null;
-
-    private Bitmap cropCopyBitmap;
-
-    private boolean computing = false;
-
-    private Matrix frameToCropTransform;
-    private Matrix cropToFrameTransform;
-
-    private long lastProcessingTimeMs;
-   /* private static final String MODEL_PATH = "mobilenet_quant_v1_224.tflite";
-    private static final String LABEL_PATH = "labels.txt";
-    private static final int INPUT_SIZE = 224;*/
 
     private Classifier classifier;
 
@@ -93,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onImage(CameraKitImage cameraKitImage) {
-
+                loadProductImage();
                 Bitmap bitmap = cameraKitImage.getBitmap();
 
                 bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
@@ -122,6 +107,33 @@ public class MainActivity extends AppCompatActivity {
 
         initTensorFlowAndLoadModel();
     }
+
+    private void loadProductImage() {
+
+        retrofitInterface = APIClient.getClient().create(RetrofitInterface.class);
+
+        Call<Product> call = retrofitInterface.getProductList();
+        call.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+
+                final Product products = response.body();
+                Log.d("MAIN", products.toString());
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                Log.d("Error", t.getMessage());
+
+
+            }
+        });
+
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -163,14 +175,7 @@ public class MainActivity extends AppCompatActivity {
                                     INPUT_NAME,
                                     OUTPUT_NAME);
 
-                    //resultsView = (ResultsView) findViewById(R.id.results);
 
-                    /*
-                    classifier = TensorFlowImageClassifier.create(
-                            getAssets(),
-                            MODEL_PATH,
-                            LABEL_PATH,
-                            INPUT_SIZE);*/
                     makeButtonVisible();
                 } catch (final Exception e) {
                     throw new RuntimeException("Error initializing TensorFlow!", e);
