@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.poojab26.visualsearchtensorflow.Interface.RetrofitInterface;
 import com.poojab26.visualsearchtensorflow.Model.Product;
+import com.poojab26.visualsearchtensorflow.Model.ProductLabel;
 import com.poojab26.visualsearchtensorflow.Utils.APIClient;
 import com.squareup.picasso.Picasso;
 import com.wonderkiln.camerakit.CameraKitError;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageViewResult;
     private CameraView cameraView;
 
+    public String topResult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,11 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
                 bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
 
-                //imageViewResult.setImageBitmap(bitmap);
-
                 final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
-
-                textViewResult.setText(results.toString());
+                topResult = results.get(0).getTitle();
+                textViewResult.setText(topResult);
 
             }
 
@@ -117,10 +118,19 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<Product>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
-
+                int indexLabel = 0;
                 final Product products = response.body();
                 Log.d("MAIN", products.toString());
-                String URL = products.getProductLabel().get(0).getImages().get(1).getImageUrl();
+
+                List<ProductLabel> productLabel = products.getProductLabel();
+                for(int i=0; i<productLabel.size(); i++){
+                    if(productLabel.get(i).getLabel().equalsIgnoreCase(topResult)){
+                        indexLabel = i;
+                    }
+                }
+
+                String URL = products.getProductLabel().get(indexLabel).getImages().get(1).getImageUrl();
+
                 Picasso.
                         with(getApplicationContext())
                         .load(URL)
