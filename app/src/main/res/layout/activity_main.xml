@@ -39,16 +39,15 @@
 
     </LinearLayout>
 
-
-
-    <Button
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnDetectObject"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:text="@string/detect_object"
-        android:textAllCaps="false"
-        android:textColor="@android:color/black"
-        android:visibility="gone" />
+        android:src="@drawable/ic_camera"
+        android:padding="4dp"
+        android:layout_margin="16dp" />
+
+
 
 </FrameLayout>

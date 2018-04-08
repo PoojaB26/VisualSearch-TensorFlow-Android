@@ -3,6 +3,7 @@ package com.poojab26.visualsearchtensorflow;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Executor executor = Executors.newSingleThreadExecutor();
     private TextView textViewResult;
-    private Button btnDetectObject;
+    private FloatingActionButton btnDetectObject;
     private ImageView imageViewResult;
     private CameraView cameraView;
 
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
                 List<ProductLabel> productLabel = products.getProductLabel();
                 for(int i=0; i<productLabel.size(); i++){
-                    if(productLabel.get(i).getLabel().equalsIgnoreCase(topResult)){
+                    if(productLabel.get(i).getLabel().equalsIgnoreCase("white_shirts")){
                         indexLabel = i;
                     }
                 }

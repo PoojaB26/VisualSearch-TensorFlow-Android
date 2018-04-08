@@ -22,7 +22,7 @@ public class APIClient {
 
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://gist.githubusercontent.com/PoojaB26/07cd672876c885f21396313d07270db9/raw/2cdc14ed43641f7f9e67333b25f30e55058fbdcf/")
+                .baseUrl("https://gist.githubusercontent.com/PoojaB26/07cd672876c885f21396313d07270db9/raw/dc296120564a1002c2a30c8b06371baa3b247636/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
