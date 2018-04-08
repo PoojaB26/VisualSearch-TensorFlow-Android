@@ -3,17 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
-    <com.wonderkiln.camerakit.CameraView
+
+
+   <!-- <com.wonderkiln.camerakit.CameraView
         android:id="@+id/cameraView"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_gravity="center|top" />
+        android:layout_gravity="center|top" />-->
 
 
-    <LinearLayout
+  <!--  <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_gravity="center|top"
@@ -37,16 +38,8 @@
             android:scrollbars="vertical"
             android:textColor="@android:color/black" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btnDetectObject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:src="@drawable/ic_camera"
-        android:padding="4dp"
-        android:layout_margin="16dp" />
 
 
 

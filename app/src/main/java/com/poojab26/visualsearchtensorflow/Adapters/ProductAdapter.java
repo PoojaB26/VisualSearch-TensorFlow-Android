@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.poojab26.visualsearchtensorflow.Model.Image;
 import com.poojab26.visualsearchtensorflow.Model.Product;
+import com.poojab26.visualsearchtensorflow.Model.ProductLabel;
 import com.poojab26.visualsearchtensorflow.R;
 import com.squareup.picasso.Picasso;
 
@@ -19,16 +21,17 @@ import java.util.List;
  */
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
-    public ProductAdapter() {
-      //  productList = products;
-
+    public ProductAdapter(List<Image> images, int label_index) {
+        imagesList = images;
+        indexLabel = label_index;
     }
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-//    private final List<Product> productList;
+    private final List<Image> imagesList;
+    private final int indexLabel;
 
 
     @Override
@@ -46,8 +49,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return 1;
-        //return productList.size();
+        return imagesList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -62,22 +64,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         }
 
         public void bind(final int position) {
-            String imgPath = "https://www.gettyimages.in/gi-resources/images/Homepage/Hero/US/SEP2016/embed7-601057996.jpg";
+            String imgPath = imagesList.get(position).getImageUrl();
             if (!TextUtils.isEmpty(imgPath)) {
                 Picasso.with(itemView.getContext())
                         .load(imgPath)
                         .into(ivProductImage);
 
-          /*  tvServings.setText(Integer.toString(recipeList.get(position).getServings())+ " Servings");
-            tvName.setText(recipeList.get(position).getName());
-            String imgPath = recipeList.get(position).getImage();
-            if(!TextUtils.isEmpty(imgPath)) {
-                Picasso.with(itemView.getContext())
-                        .load(imgPath)
-                        .into(ivRecipeImage);
-            }
-
-*/
             }
         }
     }

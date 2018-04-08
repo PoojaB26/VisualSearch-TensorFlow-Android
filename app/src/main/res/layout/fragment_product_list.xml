@@ -27,6 +27,15 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Hello"
+            android:id="@+id/tvProductCategory"
+            android:layout_gravity="center|top"
+            android:textColor="#000"
+            android:padding="8dp"/>
+
         <android.support.v7.widget.RecyclerView
 
             android:id="@+id/rvProducts"
@@ -34,8 +43,19 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
             app:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/product_item_list" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnDetectObject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:src="@drawable/ic_camera"
+            android:padding="4dp"
+            android:layout_margin="16dp" />
+
     </FrameLayout>
 
 
