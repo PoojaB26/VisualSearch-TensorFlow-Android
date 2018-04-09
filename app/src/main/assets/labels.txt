@@ -8,4 +8,4 @@ suit
 summerdress
 top
 tshirt
-white shirt
+white_shirt

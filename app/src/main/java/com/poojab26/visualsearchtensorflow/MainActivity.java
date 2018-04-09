@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ProductListFragment productListFragment = new ProductListFragment();
-        productListFragment.setTopResult("white_shirts");
+        productListFragment.setTopResult("all");
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.activity_main, productListFragment)

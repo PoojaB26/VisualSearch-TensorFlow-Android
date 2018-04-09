@@ -14,14 +14,15 @@ import android.widget.TextView;
 
 import com.poojab26.visualsearchtensorflow.Adapters.ProductAdapter;
 import com.poojab26.visualsearchtensorflow.Interface.RetrofitInterface;
-import com.poojab26.visualsearchtensorflow.Model.Image;
 import com.poojab26.visualsearchtensorflow.Model.Product;
-import com.poojab26.visualsearchtensorflow.Model.ProductLabel;
+import com.poojab26.visualsearchtensorflow.Model.Products;
 import com.poojab26.visualsearchtensorflow.R;
 import com.poojab26.visualsearchtensorflow.Utils.APIClient;
 
-import java.util.List;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +36,7 @@ public class ProductListFragment extends Fragment {
     public RetrofitInterface retrofitInterface;
     TextView tvProductCategory;
     String topResult = null;
+    Boolean mSimilarItems = false;
     FloatingActionButton fabButtonOpenCamera;
 
     public ProductListFragment() {
@@ -64,7 +66,7 @@ public class ProductListFragment extends Fragment {
                 fabButtonOpenCamera.setVisibility(View.GONE);
             }
         });
-
+       // loadProductImage("f");
         setupRecyclerView();
         return rootView;
     }
@@ -78,12 +80,29 @@ public class ProductListFragment extends Fragment {
 
         retrofitInterface = APIClient.getClient().create(RetrofitInterface.class);
 
-        Call<Product> call = retrofitInterface.getProductList();
-        call.enqueue(new Callback<Product>() {
+        Call<Products> call = retrofitInterface.getProductList();
+        call.enqueue(new Callback<Products>() {
             @Override
-            public void onResponse(Call<Product> call, Response<Product> response) {
+            public void onResponse(Call<Products> call, Response<Products> response) {
                 int indexLabel = 0;
-                final Product products = response.body();
+
+                Products products = response.body();
+                Log.d("LOL Frag", topResultArg);
+                ArrayList<Product> customProducts;
+                customProducts = new ArrayList();
+                for(int i=0; i<products.getProducts().size(); i++){
+                    if (topResultArg.equalsIgnoreCase("all")){
+                        customProducts = products.getProducts();
+                        Log.d("LOL", i+"");
+                        break;
+                    }
+                    else if(products.getProducts().get(i).getProductLabel().equalsIgnoreCase(topResultArg))
+                    {
+                        customProducts.add(products.getProducts().get(i));
+                    }
+                }
+                rvProducts.setAdapter(new ProductAdapter(customProducts, topResultArg));
+               /* final Product products = response.body();
                 List<ProductLabel> productLabel = products.getProductLabel();
               //  Log.d("TAG", topResult);
                     for (int i = 0; i < productLabel.size(); i++) {
@@ -93,12 +112,12 @@ public class ProductListFragment extends Fragment {
                             List<Image> imagesList = productLabel.get(indexLabel).getImages();
                             rvProducts.setAdapter(new ProductAdapter(imagesList, indexLabel));
                         }
-                    }
+                    }*/
 
             }
 
             @Override
-            public void onFailure(Call<Product> call, Throwable t) {
+            public void onFailure(Call<Products> call, Throwable t) {
                 Log.d("Error", t.getMessage());
             }
         });
@@ -119,5 +138,9 @@ public class ProductListFragment extends Fragment {
     public void setTopResult(String result) {
         topResult = result;
         loadProductImage(topResult);
+    }
+
+    public void forSimilarItems(Boolean similarItems){
+        mSimilarItems = similarItems;
     }
 }

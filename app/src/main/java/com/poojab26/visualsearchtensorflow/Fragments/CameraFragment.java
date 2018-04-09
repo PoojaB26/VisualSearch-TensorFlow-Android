@@ -86,7 +86,7 @@ public class CameraFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().remove(CameraFragment.this).commit();
 
                 ProductListFragment productListFragment = new ProductListFragment();
-                productListFragment.setTopResult("kurta");
+                productListFragment.setTopResult("gown");
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.activity_main, productListFragment, null)
                         .commit();

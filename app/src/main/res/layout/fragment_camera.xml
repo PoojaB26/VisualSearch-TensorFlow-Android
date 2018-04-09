@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fabClick"
+        android:src="@drawable/ic_camera"
         android:layout_gravity="center|bottom"
         android:layout_margin="16dp"/>
 

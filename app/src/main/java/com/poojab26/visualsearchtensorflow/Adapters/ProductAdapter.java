@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.poojab26.visualsearchtensorflow.Model.Image;
 import com.poojab26.visualsearchtensorflow.Model.Product;
-import com.poojab26.visualsearchtensorflow.Model.ProductLabel;
 import com.poojab26.visualsearchtensorflow.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,17 +19,13 @@ import java.util.List;
  */
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
-    public ProductAdapter(List<Image> images, int label_index) {
-        imagesList = images;
-        indexLabel = label_index;
+    public ProductAdapter(ArrayList<Product> products, String result) {
+        productList = products;
+        topResult = result;
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
-    private final List<Image> imagesList;
-    private final int indexLabel;
+    private final ArrayList<Product> productList;
+    private final String topResult;
 
 
     @Override
@@ -43,13 +37,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ProductAdapter.ViewHolder holder, int position) {
-        holder.bind(position);
+
+            holder.bind(position);
 
     }
 
     @Override
     public int getItemCount() {
-        return imagesList.size();
+        /*int size=0;
+        for(int i=0; i<productList.size(); i++){
+            if(productList.get(i).getProductLabel().equalsIgnoreCase(topResult))
+                size++;
+        }*/
+        return productList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,19 +58,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             ivProductImage = itemView.findViewById(R.id.ivProductImage);
-
         }
 
         public void bind(final int position) {
-            String imgPath = imagesList.get(position).getImageUrl();
-            if (!TextUtils.isEmpty(imgPath)) {
-                Picasso.with(itemView.getContext())
-                        .load(imgPath)
-                        .into(ivProductImage);
+            //here it doesnt bind the image to the items that are not equal to topResult, but the items still display as blank empty boxes.
+            // I dont want them to display at all.
+          //  if(productList.get(position).getProductLabel().equals(topResult)) {
+                String imgPath = productList.get(position).getProductUrl();
+                if (!TextUtils.isEmpty(imgPath)) {
+                    Picasso.with(itemView.getContext())
+                            .load(imgPath)
+                            .into(ivProductImage);
 
-            }
+                }
+         //   }
         }
     }
 }
