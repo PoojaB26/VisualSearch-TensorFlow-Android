@@ -14,7 +14,7 @@ import retrofit2.http.GET;
 
 
 public interface RetrofitInterface {
-    @GET("raw/1d86056892fca7bb3d00c0ab366e3415a8e71d89/product.json")
+    @GET("raw/c2854a0b65ddf79194b89bdb51a77140d84c3e0f/product.json")
     Call<Products> getProductList();
 
 }

@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 
 public class CameraFragment extends Fragment {
 
-    private String topResult, secondResult = "none";
+    private String topResult, secondResult = "all";
     private Float topResultConfidence, secondResultConfidence;
 
     private CameraView cameraView;
@@ -95,7 +95,7 @@ public class CameraFragment extends Fragment {
                     Log.d("LOL second", secondResult + secondResultConfidence);
 
                     if(secondResultConfidence<0.5) {
-                        secondResult = "none";
+                        secondResult = "all";
                     }
                 }
 
@@ -109,7 +109,7 @@ public class CameraFragment extends Fragment {
 
                 ProductListFragment productListFragment = new ProductListFragment();
                 productListFragment.setTopResult(topResult);
-                productListFragment.setSecondResult("flipflops");
+                productListFragment.setSecondResult(secondResult);
                 if(topResult.equalsIgnoreCase("none")) {
                     productListFragment.setSimilarItems(false);
                 }

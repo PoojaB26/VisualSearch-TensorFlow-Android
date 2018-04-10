@@ -59,8 +59,9 @@ public class ProductListFragment extends Fragment {
         tvSecondCategory = rootView.findViewById(R.id.tvSecondCategory);
         if(mSimilarItems){
             tvProductCategory.setText("View similar products");
-            if(!secondResult.equalsIgnoreCase("none"))
-                tvSecondCategory.setText("You can also view");
+            tvSecondCategory.setText("You can also view");
+          //  if(!secondResult.equalsIgnoreCase("all"))
+
         }
         fabButtonOpenCamera = rootView.findViewById(R.id.btnDetectObject);
         fabButtonOpenCamera.setVisibility(View.VISIBLE);
@@ -138,7 +139,11 @@ public class ProductListFragment extends Fragment {
                         customProducts.add(products.getProducts().get(i));
                     }
                 }
-                rvSecondProducts.setAdapter(new ProductAdapter(customProducts, true));
+                if(!secondResultArg.equalsIgnoreCase("all"))
+                    rvSecondProducts.setAdapter(new ProductAdapter(customProducts, true));
+                else
+                    rvSecondProducts.setAdapter(new ProductAdapter(products.getProducts(), true));
+
             }
 
             @Override
