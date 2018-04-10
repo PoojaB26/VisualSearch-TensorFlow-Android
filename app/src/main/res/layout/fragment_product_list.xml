@@ -5,27 +5,29 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Hello"
-            android:id="@+id/tvProductCategory"
-            android:layout_gravity="center|top"
-            android:textColor="#000"
-            android:padding="8dp"/>
-
+    android:layout_marginTop="?attr/actionBarSize"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
    <ScrollView
        android:layout_width="match_parent"
-       android:layout_height="match_parent">
+       android:layout_height="match_parent"
+       android:layout_marginTop="12dp">
 
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="vertical">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               tools:text="Showing similar items"
+               android:id="@+id/tvProductCategory"
+               android:layout_gravity="start"
+               android:textColor="#000"
+               android:paddingStart="12dp"
+               android:paddingEnd="12dp"/>
 
            <android.support.v7.widget.RecyclerView
 
@@ -37,6 +39,17 @@
                android:layout_marginTop="32dp"
                app:layoutManager="LinearLayoutManager"
                tools:listitem="@layout/product_item_list" />
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               tools:text="You can also view"
+
+               android:id="@+id/tvSecondCategory"
+               android:layout_gravity="start"
+               android:textColor="#000"
+               android:paddingStart="12dp"
+               android:paddingEnd="12dp"/>
 
            <android.support.v7.widget.RecyclerView
 

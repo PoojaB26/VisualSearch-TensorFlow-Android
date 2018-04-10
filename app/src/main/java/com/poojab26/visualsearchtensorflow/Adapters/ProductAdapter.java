@@ -71,7 +71,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                             .into(ivProductImage);
 
                 }
-         //   }
         }
     }
 }

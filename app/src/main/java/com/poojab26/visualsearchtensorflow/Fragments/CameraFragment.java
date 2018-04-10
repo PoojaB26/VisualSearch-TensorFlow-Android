@@ -109,8 +109,12 @@ public class CameraFragment extends Fragment {
 
                 ProductListFragment productListFragment = new ProductListFragment();
                 productListFragment.setTopResult(topResult);
-                productListFragment.setSecondResult(secondResult);
-
+                productListFragment.setSecondResult("flipflops");
+                if(topResult.equalsIgnoreCase("none")) {
+                    productListFragment.setSimilarItems(false);
+                }
+                else
+                    productListFragment.setSimilarItems(true);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.activity_main, productListFragment, null)
                         .commit();

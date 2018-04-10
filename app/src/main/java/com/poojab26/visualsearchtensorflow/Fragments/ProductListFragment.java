@@ -36,8 +36,9 @@ public class ProductListFragment extends Fragment {
     RecyclerView.LayoutManager topLayoutManager, secondLayoutManager;
     RecyclerView rvTopProducts, rvSecondProducts;
     public RetrofitInterface retrofitInterface;
-    TextView tvProductCategory;
+    TextView tvProductCategory, tvSecondCategory;
     String topResult = null, secondResult=null;
+    Boolean mSimilarItems = false;
     FloatingActionButton fabButtonOpenCamera;
 
     public ProductListFragment() {
@@ -55,6 +56,12 @@ public class ProductListFragment extends Fragment {
         rvSecondProducts = rootView.findViewById(R.id.rvSecondProducts);
 
         tvProductCategory = rootView.findViewById(R.id.tvProductCategory);
+        tvSecondCategory = rootView.findViewById(R.id.tvSecondCategory);
+        if(mSimilarItems){
+            tvProductCategory.setText("View similar products");
+            if(!secondResult.equalsIgnoreCase("none"))
+                tvSecondCategory.setText("You can also view");
+        }
         fabButtonOpenCamera = rootView.findViewById(R.id.btnDetectObject);
         fabButtonOpenCamera.setVisibility(View.VISIBLE);
 
@@ -76,10 +83,8 @@ public class ProductListFragment extends Fragment {
     private void setupRecyclerView() {
         topLayoutManager = new GridLayoutManager(getActivity(), 2);
         secondLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL);
-
         rvTopProducts.setLayoutManager(topLayoutManager);
         rvSecondProducts.setLayoutManager(secondLayoutManager);
-
     }
 
     private void loadProductImage(final String topResultArg) {
@@ -96,7 +101,6 @@ public class ProductListFragment extends Fragment {
                 for(int i=0; i<products.getProducts().size(); i++){
                     if (topResultArg.equalsIgnoreCase("all")){
                         customProducts = products.getProducts();
-                        Log.d("LOL", i+"");
                         break;
                     }
                     else if(products.getProducts().get(i).getProductLabel().equalsIgnoreCase(topResultArg))
@@ -130,8 +134,7 @@ public class ProductListFragment extends Fragment {
                 ArrayList<Product> customProducts;
                 customProducts = new ArrayList();
                 for(int i=0; i<products.getProducts().size(); i++){
-                    if(products.getProducts().get(i).getProductLabel().equalsIgnoreCase(secondResultArg))
-                    {
+                    if(products.getProducts().get(i).getProductLabel().equalsIgnoreCase(secondResultArg)){
                         customProducts.add(products.getProducts().get(i));
                     }
                 }
@@ -167,4 +170,7 @@ public class ProductListFragment extends Fragment {
         loadSecondResultsImage(secondResult);
     }
 
+    public void setSimilarItems(boolean similarItems) {
+        mSimilarItems = similarItems;
+    }
 }
