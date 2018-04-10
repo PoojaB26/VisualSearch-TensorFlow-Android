@@ -2,6 +2,7 @@ package com.poojab26.visualsearchtensorflow.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,19 +20,25 @@ import java.util.List;
  */
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
-    public ProductAdapter(ArrayList<Product> products, String result) {
+    public ProductAdapter(ArrayList<Product> products, Boolean result) {
         productList = products;
-        topResult = result;
+        secondResult = result;
     }
 
     private final ArrayList<Product> productList;
-    private final String topResult;
+    private final Boolean secondResult;
 
 
     @Override
     public ProductAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View view;
+        if(!secondResult){
+            view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.product_item_list, parent, false);
+        }else{
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.second_product_item_list, parent, false);
+        }
         return new ViewHolder(view);
     }
 
@@ -44,11 +51,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        /*int size=0;
-        for(int i=0; i<productList.size(); i++){
-            if(productList.get(i).getProductLabel().equalsIgnoreCase(topResult))
-                size++;
-        }*/
         return productList.size();
     }
 
@@ -62,9 +64,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         }
 
         public void bind(final int position) {
-            //here it doesnt bind the image to the items that are not equal to topResult, but the items still display as blank empty boxes.
-            // I dont want them to display at all.
-          //  if(productList.get(position).getProductLabel().equals(topResult)) {
                 String imgPath = productList.get(position).getProductUrl();
                 if (!TextUtils.isEmpty(imgPath)) {
                     Picasso.with(itemView.getContext())

@@ -30,7 +30,9 @@ import java.util.concurrent.Executors;
 
 public class CameraFragment extends Fragment {
 
-    private String topResult;
+    private String topResult, secondResult = "none";
+    private Float topResultConfidence, secondResultConfidence;
+
     private CameraView cameraView;
     private FloatingActionButton fabCamera;
 
@@ -81,12 +83,34 @@ public class CameraFragment extends Fragment {
                 bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
 
                 final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
+
                 topResult = results.get(0).getTitle();
-                Log.d("LOL", topResult);
+                topResultConfidence = results.get(0).getConfidence();
+                Log.d("LOL first", topResult + topResultConfidence);
+
+                int size = results.size()-1;
+                if(size>=1) {
+                    secondResult = results.get(1).getTitle();
+                    secondResultConfidence = results.get(1).getConfidence();
+                    Log.d("LOL second", secondResult + secondResultConfidence);
+
+                    if(secondResultConfidence<0.5) {
+                        secondResult = "none";
+                    }
+                }
+
+                if(topResultConfidence<0.7) {
+                    topResult = "none";
+                }
+
+
+
                 getActivity().getSupportFragmentManager().beginTransaction().remove(CameraFragment.this).commit();
 
                 ProductListFragment productListFragment = new ProductListFragment();
-                productListFragment.setTopResult("gown");
+                productListFragment.setTopResult(topResult);
+                productListFragment.setSecondResult(secondResult);
+
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.activity_main, productListFragment, null)
                         .commit();
@@ -104,7 +128,6 @@ public class CameraFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cameraView.captureImage();
-                Log.d("LOL", "onclick");
             }
         });
 

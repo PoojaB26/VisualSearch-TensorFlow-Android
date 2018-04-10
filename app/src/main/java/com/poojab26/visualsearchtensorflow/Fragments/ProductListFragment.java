@@ -6,11 +6,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.poojab26.visualsearchtensorflow.Adapters.ProductAdapter;
 import com.poojab26.visualsearchtensorflow.Interface.RetrofitInterface;
@@ -31,12 +33,11 @@ import retrofit2.Response;
 
 public class ProductListFragment extends Fragment {
 
-    RecyclerView.LayoutManager layoutManager;
-    RecyclerView rvProducts;
+    RecyclerView.LayoutManager topLayoutManager, secondLayoutManager;
+    RecyclerView rvTopProducts, rvSecondProducts;
     public RetrofitInterface retrofitInterface;
     TextView tvProductCategory;
-    String topResult = null;
-    Boolean mSimilarItems = false;
+    String topResult = null, secondResult=null;
     FloatingActionButton fabButtonOpenCamera;
 
     public ProductListFragment() {
@@ -50,7 +51,9 @@ public class ProductListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_product_list, container, false);
-        rvProducts = rootView.findViewById(R.id.rvProducts);
+        rvTopProducts = rootView.findViewById(R.id.rvProducts);
+        rvSecondProducts = rootView.findViewById(R.id.rvSecondProducts);
+
         tvProductCategory = rootView.findViewById(R.id.tvProductCategory);
         fabButtonOpenCamera = rootView.findViewById(R.id.btnDetectObject);
         fabButtonOpenCamera.setVisibility(View.VISIBLE);
@@ -66,14 +69,17 @@ public class ProductListFragment extends Fragment {
                 fabButtonOpenCamera.setVisibility(View.GONE);
             }
         });
-       // loadProductImage("f");
         setupRecyclerView();
         return rootView;
     }
 
     private void setupRecyclerView() {
-        layoutManager = new GridLayoutManager(getActivity(), 2);
-        rvProducts.setLayoutManager(layoutManager);
+        topLayoutManager = new GridLayoutManager(getActivity(), 2);
+        secondLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL);
+
+        rvTopProducts.setLayoutManager(topLayoutManager);
+        rvSecondProducts.setLayoutManager(secondLayoutManager);
+
     }
 
     private void loadProductImage(final String topResultArg) {
@@ -84,10 +90,7 @@ public class ProductListFragment extends Fragment {
         call.enqueue(new Callback<Products>() {
             @Override
             public void onResponse(Call<Products> call, Response<Products> response) {
-                int indexLabel = 0;
-
                 Products products = response.body();
-                Log.d("LOL Frag", topResultArg);
                 ArrayList<Product> customProducts;
                 customProducts = new ArrayList();
                 for(int i=0; i<products.getProducts().size(); i++){
@@ -101,19 +104,38 @@ public class ProductListFragment extends Fragment {
                         customProducts.add(products.getProducts().get(i));
                     }
                 }
-                rvProducts.setAdapter(new ProductAdapter(customProducts, topResultArg));
-               /* final Product products = response.body();
-                List<ProductLabel> productLabel = products.getProductLabel();
-              //  Log.d("TAG", topResult);
-                    for (int i = 0; i < productLabel.size(); i++) {
+                if(topResultArg.equalsIgnoreCase("none")){
+                    Toast.makeText(getContext() ,"No similar items available!", Toast.LENGTH_SHORT).show();
+                    rvTopProducts.setAdapter(new ProductAdapter(products.getProducts(), false));
+                }else{
+                    rvTopProducts.setAdapter(new ProductAdapter(customProducts, false));
+                }
+            }
 
-                        if (productLabel.get(i).getLabel().equalsIgnoreCase(topResultArg)) {
-                            indexLabel = i;
-                            List<Image> imagesList = productLabel.get(indexLabel).getImages();
-                            rvProducts.setAdapter(new ProductAdapter(imagesList, indexLabel));
-                        }
-                    }*/
+            @Override
+            public void onFailure(Call<Products> call, Throwable t) {
+                Log.d("Error", t.getMessage());
+            }
+        });
+    }
+    private void loadSecondResultsImage(final String secondResultArg) {
 
+        retrofitInterface = APIClient.getClient().create(RetrofitInterface.class);
+
+        Call<Products> call = retrofitInterface.getProductList();
+        call.enqueue(new Callback<Products>() {
+            @Override
+            public void onResponse(Call<Products> call, Response<Products> response) {
+                Products products = response.body();
+                ArrayList<Product> customProducts;
+                customProducts = new ArrayList();
+                for(int i=0; i<products.getProducts().size(); i++){
+                    if(products.getProducts().get(i).getProductLabel().equalsIgnoreCase(secondResultArg))
+                    {
+                        customProducts.add(products.getProducts().get(i));
+                    }
+                }
+                rvSecondProducts.setAdapter(new ProductAdapter(customProducts, true));
             }
 
             @Override
@@ -140,7 +162,9 @@ public class ProductListFragment extends Fragment {
         loadProductImage(topResult);
     }
 
-    public void forSimilarItems(Boolean similarItems){
-        mSimilarItems = similarItems;
+    public void setSecondResult(String result) {
+        secondResult = result;
+        loadSecondResultsImage(secondResult);
     }
+
 }
